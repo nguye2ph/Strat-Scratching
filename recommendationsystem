@@ -2,6 +2,8 @@
 --For each Facebook user, find pages that this user doesn't follow but at least one of their friends does. 
 --Output the user ID and the ID of the page that should be recommended to this user.
 
+-- SQL Server
+
 select DISTINCT uf.user_id, up.page_id
 from users_friends uf
 JOIN users_pages up 
@@ -15,3 +17,5 @@ WHERE upp.user_id = uf.user_id
 AND upp.page_id = up.page_id
 )
 ;
+
+-- Pandas
