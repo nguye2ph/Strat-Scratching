@@ -12,6 +12,35 @@ SUM(CASE WHEN year = '2020' THEN 1 WHEN year = '2019' THEN -1 ELSE 0 END) AS net
 from car_launches
 GROUP BY company_name
 
+---pandas 
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+df = car_launches.groupby(['company_name', 'year']).count().reset_index()
+df = df.pivot_table(values='product_name', index='company_name', aggfunc='sum', columns='year').reset_index()
+df['delta'] = df[2020]-df[2019]
+df = df[['company_name', 'delta']]
+
+
+--- or
+
+import pandas as pd
+import numpy as np
+from datetime import datetime
+
+df_2020 = car_launches[car_launches['year'].astype(str) == '2020']
+df_2019 = car_launches[car_launches['year'].astype(str) == '2019']
+df = pd.merge(df_2020, df_2019, how='outer', on=[
+    'company_name'], suffixes=['_2020', '_2019']).fillna(0)
+df = df[df['product_name_2020'] != df['product_name_2019']]
+df = df.groupby(['company_name']).agg(
+    {'product_name_2020': 'nunique', 'product_name_2019': 'nunique'}).reset_index()
+df['net_new_products'] = df['product_name_2020'] - df['product_name_2019']
+result = df[['company_name', 'net_new_products']]
+
+
 
  
 
