@@ -34,4 +34,27 @@ highest_marketing = db_employee_dept.loc[db_employee_dept['department'] == 'mark
 highest_engineering = db_employee_dept.loc[db_employee_dept['department'] == 'engineering','salary'].max()
 highest_marketing - highest_engineering
 
+-- current salary 
+select 
+id, 
+first_name, 
+last_name,
+department_id, 
+salary
+FROM 
+(
+SELECT *
+, ROW_NUMBER() OVER (PARTITION BY id, first_name, last_name ORDER BY salary DESC, department_id DESC) AS row_num
+from ms_employee_salary
+) AS X
+WHERE X.row_num = 1
+ORDER BY X.id ASC
+
+## pandas
+import pandas as pd
+
+ms_employee_salary.groupby(['id','first_name','last_name','department_id'])['salary'].max().reset_index()
+
+
+
 
