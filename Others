@@ -7,3 +7,8 @@ SELECT customer_id,
 FROM customers;
 --- so this ranks all customer basically ranking each row rather than by dept for ex
 
+--ntile
+
+--first value
+
+--last value
