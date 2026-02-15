@@ -1,0 +1,7 @@
+-- 02/14/26:
+
+you can use window function without partition
+
+SELECT customer_id,
+       NTILE(4) OVER(ORDER BY lifetime_value DESC) quartile
+FROM customers;
