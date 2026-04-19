@@ -70,3 +70,21 @@ ORDER BY SUBSTR(name, LEN(name)-2, 3), id;
 SELECT name FROM students WHERE marks > 75 
 ORDER BY RIGHT(name, 3), id;
 
+
+SELECT 
+Name+ 
+'(' 
++LEFT(Occupation, 1)
++ ')'
+FROM OCCUPATIONS
+ORDER BY Name ASC;
+
+
+SELECT 
+'There are a total of' + ' ' +
+ CAST(COUNT(*) AS nvarchar) + ' ' + LOWER(occupation) + 's.'
+FROM OCCUPATIONS
+GROUP BY 
+Occupation
+ORDER BY (COUNT(*));
+
