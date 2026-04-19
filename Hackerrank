@@ -149,3 +149,16 @@ SELECT Name,Grade,Marks FROM Students,Grades WHERE Marks BETWEEN Min_Mark AND Ma
 SELECT null,Grade,Marks FROM Students,Grades WHERE Marks BETWEEN Min_Mark AND Max_Mark and Grade<8 ORDER BY Grade desc,Name,Marks;
 
 --this means that I'm cross joining selecting from 2 tables
+
+
+SELECT
+CASE WHEN Grade < 8 
+THEN NULL 
+ELSE Name END,
+Grade, 
+Marks
+FROM
+Grades
+CROSS JOIN Students
+WHERE Marks BETWEEN Min_Mark AND Max_Mark
+ORDER BY Grade desc, Name;
