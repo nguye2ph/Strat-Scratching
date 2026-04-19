@@ -66,3 +66,7 @@ where not (city like 'A%' or city like 'E%' or city like 'I%' or city like 'O%' 
 
 SELECT name FROM students WHERE marks > 75 
 ORDER BY SUBSTR(name, LEN(name)-2, 3), id;
+
+SELECT name FROM students WHERE marks > 75 
+ORDER BY RIGHT(name, 3), id;
+
