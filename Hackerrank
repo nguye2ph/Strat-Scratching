@@ -133,3 +133,9 @@ FROM STATION;
 
 
 
+DECLARE @Median real
+SELECT @Median = PERCENTILE_CONT(0.5) 
+  WITHIN GROUP (ORDER BY LAT_N) OVER ()
+FROM station
+print(@Median)
+
