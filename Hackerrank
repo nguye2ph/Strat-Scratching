@@ -57,3 +57,8 @@ select city c, length(city) l
 from   station
 order by l asc, c asc
 limit 1;
+
+--i usually use not like but you can use not()
+select distinct city
+from station 
+where not (city like 'A%' or city like 'E%' or city like 'I%' or city like 'O%' or  city like 'U%') or not (city like '%a' or city like '%e' or city like '%i' or city like '%o' or  city like '%u');
