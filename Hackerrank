@@ -1,1 +1,16 @@
+---median in sql server
+SET NOCOUNT ON;
 
+
+SELECT CAST( AVG(1.0 * LAT_N) AS NUMERIC(20,4))
+FROM
+(
+   SELECT LAT_N, 
+      ra = ROW_NUMBER() OVER (ORDER BY LAT_N, id),
+      rd = ROW_NUMBER() OVER (ORDER BY LAT_N DESC, id DESC)
+   FROM STATION
+) AS x
+WHERE ra BETWEEN rd - 1 AND rd + 1;
+
+
+go
