@@ -24,6 +24,19 @@ select
 	h.hacker_id,
 	h.name
 from
+
+with tree (number)
+AS
+(
+select 20 AS nr
+UNION ALL 
+select number-1 AS nr FROM tree WHERE number > 1
+)
+select 
+REPLICATE('* ',number)
+ from tree
+Order by number ;
+
 	hackers h
 	inner join
 	(
