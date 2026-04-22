@@ -273,3 +273,5 @@ WHERE wp.is_evil = 0
     )
 ORDER BY w.power DESC, wp.age DESC;
 
+--- could also use row num -- i would do that first
+
