@@ -275,3 +275,16 @@ ORDER BY w.power DESC, wp.age DESC;
 
 --- could also use row num -- i would do that first
 
+SELECT X.hacker_id, X.name, SUM(X.score) FROM (
+SELECT h.hacker_id, h.name, s.score,
+ROW_NUMBER() OVER (PARTITION BY h.hacker_id, s.challenge_id ORDER BY s.score DESC) AS rn
+FROM Hackers h   
+JOIN Submissions s
+ON h.hacker_id = s.hacker_id
+WHERE s.score > 0
+) AS X
+WHERE X.rn = 1
+GROUP BY X.hacker_id, X.name
+ORDER BY SUM(X.score) DESC, X.hacker_id
+
+
