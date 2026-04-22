@@ -287,4 +287,35 @@ WHERE X.rn = 1
 GROUP BY X.hacker_id, X.name
 ORDER BY SUM(X.score) DESC, X.hacker_id
 
+select
+	h.hacker_id,
+	h.name,
+	sum(s.score)
+
+
+from
+	hackers h
+	inner join
+	(
+		select
+			hacker_id,
+			challenge_id,
+			max(score) as score
+		from
+			submissions
+		group by 
+			hacker_id,
+			challenge_id
+	) as s
+		on h.hacker_id = s.hacker_id
+group by
+	h.hacker_id,
+	h.name
+having
+	sum(s.score) <> 0
+order by
+	sum(s.score) desc,
+	h.hacker_id
+
+
 
