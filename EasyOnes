@@ -1,5 +1,32 @@
 ## Moderate Ones
 
+WITH consecutive_days AS
+  (SELECT user_id,
+          record_date,
+          LAG(record_date) OVER (PARTITION BY user_id
+                                 ORDER BY record_date) AS prev_day,
+          LEAD(record_date) OVER (PARTITION BY user_id
+                                  ORDER BY record_date) AS next_day  -- lead is rows after and it  is ord asc so it is next day (lead is row below and lag is row above)
+   FROM sf_events)
+SELECT DISTINCT user_id
+FROM consecutive_days
+WHERE DATEDIFF(DAY, prev_day, record_date) = 1 ---date diff subtracts 2nd arg from 3rd arg
+  AND DATEDIFF(DAY, record_date, next_day) = 1;
+
+
+import pandas as pd
+
+df = sf_events.drop_duplicates()
+df['record_date'] = pd.to_datetime(df['record_date'],format='%Y-%m-%d')
+df["rank"] = df.groupby("user_id")["record_date"].rank("first", ascending=True).to_list()
+
+df["consecutive_days"]=df["record_date"]-pd.to_timedelta(df["rank"], unit='D')
+result = df[['user_id', 'consecutive_days']].groupby(['user_id', 'consecutive_days']).size().to_frame('counter').reset_index()
+
+result = result.loc[result['counter'] >= 3][['user_id']]
+
+
+
 ----Aroma Based Winery Search
 --METHOD 1
 /*
