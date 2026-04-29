@@ -2,6 +2,39 @@
 
 
 --SQL Server: 
+
+--You are given the list of Facebook friends and the list of Facebook pages that users follow. Your task is to create a new recommendation system for Facebook.
+--For each Facebook user, find pages that this user doesn't follow but at least one of their friends does. 
+--Output the user ID and the ID of the page that should be recommended to this user.
+
+-- SQL Server
+
+select DISTINCT uf.user_id, up.page_id
+from users_friends uf
+JOIN users_pages up 
+ON 
+uf.friend_id
+= up.user_id
+WHERE NOT EXISTS
+( SELECT * FROM
+users_pages upp
+WHERE upp.user_id = uf.user_id
+AND upp.page_id = up.page_id
+)
+;
+
+--Pandas
+
+
+friends_pages = users_friends.merge(users_pages, left_on='friend_id', right_on='user_id')
+friends_pages = friends_pages[['user_id_x', 'page_id']]
+comparison = friends_pages.merge(users_pages, how='left', left_on=['user_id_x', 'page_id'], right_on=['user_id', 'page_id'])
+result = comparison[comparison['user_id'].isna()][['user_id_x', 'page_id']].drop_duplicates()
+result = result.rename(columns={'user_id_x': 'user_id'})
+
+
+
+
 WITH customer_daily_totals AS (
   SELECT
     o.cust_id,
