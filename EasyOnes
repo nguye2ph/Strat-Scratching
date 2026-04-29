@@ -50,10 +50,6 @@ r'\b(plums|cherries|roses|hazelnuts)\b', regex=True)
 result = winemag_p1[include & ~exclude][['winery']].drop_duplicates()
 
 
-## Highest Order Cost
-
-#### EASY ONES
-
 --- City of Los Angeles
 --sql server
 SELECT
@@ -110,6 +106,8 @@ ORDER BY X.id ASC
 import pandas as pd
 
 ms_employee_salary.groupby(['id','first_name','last_name','department_id'])['salary'].max().reset_index()
+
+#### EASY ONES
 
 -- April and May Sign Up sql server
 
