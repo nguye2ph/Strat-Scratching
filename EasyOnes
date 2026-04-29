@@ -1,5 +1,61 @@
 ## Moderate Ones
 
+
+--SQL Server: 
+WITH customer_daily_totals AS (
+  SELECT
+    o.cust_id,
+    o.order_date,
+    SUM(o.total_order_cost) AS total_daily_cost
+  FROM orders o
+  WHERE o.order_date BETWEEN '2019-02-01' AND '2019-05-01'
+  GROUP BY o.cust_id, o.order_date
+),
+ranked_daily_totals AS (
+  SELECT
+    cust_id,
+    order_date,
+    total_daily_cost,
+    RANK() OVER (
+      PARTITION BY order_date
+      ORDER BY total_daily_cost DESC
+    ) AS rnk
+  FROM customer_daily_totals
+)
+SELECT
+  c.first_name,
+  rdt.order_date,
+  rdt.total_daily_cost AS max_cost
+FROM ranked_daily_totals rdt
+JOIN customers c ON rdt.cust_id = c.id
+WHERE rdt.rnk = 1
+ORDER BY rdt.order_date;
+
+--Pandas
+
+import pandas as pd
+
+orders["order_date"] = pd.to_datetime(orders["order_date"])
+
+orders = orders[orders["order_date"].between("2019-02-01", "2019-05-01")]
+
+daily_totals = (
+    orders.groupby(["cust_id", "order_date"]) ["total_order_cost"].sum().reset_index())
+
+daily_max = (daily_totals.groupby("order_date")["total_order_cost"].transform("max"))
+
+
+top_daily = daily_totals[daily_totals["total_order_cost"] == daily_max]
+
+result = top_daily.merge(customers, left_on="cust_id", right_on="id")
+result["order_date"] = result["order_date"].dt.strftime("%Y-%m-%d")
+
+result= result[["first_name", "order_date", "total_order_cost"]].rename(
+    columns={"total_order_cost": "max_cost"}
+)
+
+
+
 WITH consecutive_days AS
   (SELECT user_id,
           record_date,
